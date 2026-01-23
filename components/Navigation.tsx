@@ -49,6 +49,11 @@ export default function Navigation() {
                 About
               </Link>
             </motion.div>
+            <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+              <Link href="#certifications" className="text-white hover:text-white/80 transition-colors text-sm font-medium">
+                Certifications
+              </Link>
+            </motion.div>
           </div>
 
           {/* Right - Initialize Button */}

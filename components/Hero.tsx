@@ -1,10 +1,61 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ArrowUpRight } from 'lucide-react'
 import { NAME } from '@/lib/constants'
+
+const statusQuotes = [
+  'TRAINING AI AGENTS...',
+  'BUILD NEXT.JS APPS',
+  'BUILD RESPONSIVE UI/UX',
+  'BUILD AUTOMATION AGENTS',
+  'ERROR DEBUGGING',
+  'OPEN FOR COLLAB',
+  'OPEN FOR SAAS PROJECTS',
+]
+
+const nameStatusLines = [
+  'Agentic AI • Automation • Full Stack',
+  'Building digital FTEs & AI workflows',
+  'Shipping modern web products',
+]
+
+function StatCard({ stat, index, isInView }: { stat: { label: string; values: string[] }; index: number; isInView: boolean }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % stat.values.length)
+    }, 2500 + index * 300)
+
+    return () => clearInterval(interval)
+  }, [stat.values.length, index])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+      transition={{ delay: 0.7 + index * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-xl p-5 text-center group hover:border-white/20 transition-all duration-300"
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4 }}
+          className="text-white text-3xl font-bold mb-1"
+        >
+          {stat.values[currentIndex]}
+        </motion.div>
+      </AnimatePresence>
+      <div className="text-white/60 text-xs uppercase tracking-wider">{stat.label}</div>
+    </motion.div>
+  )
+}
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -15,6 +66,9 @@ export default function Hero() {
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 500], [0, -50])
   const opacity = useTransform(scrollY, [0, 300], [1, 0.8])
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
+  const [currentNameStatusIndex, setCurrentNameStatusIndex] = useState(0)
+  const isInView = useInView(containerRef, { once: true, margin: '-100px' })
 
   useEffect(() => {
     // Name animation
@@ -76,7 +130,24 @@ export default function Hero() {
         }
       )
     }
+  }, [])
 
+  // Rotate quotes every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuoteIndex((prev) => (prev + 1) % statusQuotes.length)
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Rotate name status line every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentNameStatusIndex((prev) => (prev + 1) % nameStatusLines.length)
+    }, 3000)
+
+    return () => clearInterval(interval)
   }, [])
 
 
@@ -106,6 +177,22 @@ export default function Hero() {
               </h1>
             </div>
 
+            {/* Rotating status under name */}
+            <div className="h-6 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentNameStatusIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                  className="text-white/60 text-sm uppercase tracking-wider"
+                >
+                  {nameStatusLines[currentNameStatusIndex]}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
             {/* Arrow icon top right */}
             <motion.div
               className="absolute top-8 right-8"
@@ -116,18 +203,28 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right Panel - Portrait Card */}
+          {/* Right Panel - Stats & Achievements Card */}
           <motion.div
             ref={rightCardRef}
             className="bg-black/40 backdrop-blur-md border border-white/10 rounded-3xl p-8 lg:p-12 relative overflow-hidden"
           >
-            {/* Portrait placeholder */}
-            <div className="w-full h-[400px] lg:h-[500px] bg-gradient-to-br from-white/10 to-black/50 rounded-2xl mb-6 flex items-center justify-center">
-              <div className="text-white/20 text-sm">Portrait Image</div>
+            {/* Stats Grid */}
+            <div className="mb-8">
+              <div className="text-white/60 text-xs uppercase tracking-wider mb-6">ACHIEVEMENTS</div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: 'Projects', values: ['30+', '35+', '40+'] },
+                  { label: 'Clients', values: ['5+', '7+', '10+'] },
+                  { label: 'Certifications', values: ['3', '3', '3'] },
+                  { label: 'Avg Score', values: ['73%', '73%', '73%'] },
+                ].map((stat, index) => (
+                  <StatCard key={stat.label} stat={stat} index={index} isInView={isInView} />
+                ))}
+              </div>
             </div>
 
             {/* Status Badge */}
-            <div className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
               <div className="text-white/60 text-xs uppercase tracking-wider mb-2">STATUS</div>
               <div className="text-white text-2xl font-bold">OPEN FOR WORK</div>
             </div>
@@ -155,7 +252,20 @@ export default function Hero() {
               }}
             />
           </div>
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">TRAINING AI AGENTS...</h3>
+          <div className="relative h-12 md:h-14 mb-2 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.h3
+                key={currentQuoteIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                className="text-2xl md:text-3xl font-bold text-white absolute inset-0"
+              >
+                {statusQuotes[currentQuoteIndex]}
+              </motion.h3>
+            </AnimatePresence>
+          </div>
           <div className="text-white/60 text-sm uppercase tracking-wider">AI AGENT ACTIVE</div>
         </motion.div>
       </div>

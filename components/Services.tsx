@@ -32,6 +32,13 @@ const services = [
   },
 ]
 
+const offerTitles = [
+  'OFFER',
+  'DELIVER',
+  'BUILD',
+  'ENGINEER',
+]
+
 function ServiceCard({ service, index, isInView }: { service: typeof services[0]; index: number; isInView: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -81,8 +88,8 @@ function ServiceCard({ service, index, isInView }: { service: typeof services[0]
     <motion.div
       ref={cardRef}
       className="group cursor-pointer relative rounded-2xl overflow-hidden"
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+      whileHover={{ y: -8, scale: 1.01 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -118,29 +125,25 @@ function ServiceCard({ service, index, isInView }: { service: typeof services[0]
             </motion.div>
           </div>
 
-          {/* Default description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: index * 0.4 + 0.8, duration: 0.8 }}
-            className="text-white/50 mb-8 leading-relaxed max-w-3xl text-lg"
-          >
-            {service.description}
-          </motion.p>
-
-          {/* Hover description - smooth reveal */}
+          {/* Description - only shows on hover with smooth animation */}
           <AnimatePresence>
             {isHovered && (
               <motion.div
                 initial={{ opacity: 0, height: 0, y: -10 }}
                 animate={{ opacity: 1, height: 'auto', y: 0 }}
                 exit={{ opacity: 0, height: 0, y: -10 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="mb-8 overflow-hidden"
               >
-                <p className="text-white/70 leading-relaxed max-w-3xl text-base">
-                  {service.hoverDescription}
-                </p>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.4, delay: 0.1 }}
+                  className="text-white/70 leading-relaxed max-w-3xl text-lg"
+                >
+                  {service.description}
+                </motion.p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -172,12 +175,22 @@ function ServiceCard({ service, index, isInView }: { service: typeof services[0]
 export default function Services() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [offerTitleIndex, setOfferTitleIndex] = useState(0)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   })
   const y = useTransform(scrollYProgress, [0, 1], [50, -50])
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+
+  // Rotate "WHAT I ..." title every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOfferTitleIndex((prev) => (prev + 1) % offerTitles.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <motion.section
@@ -197,9 +210,24 @@ export default function Services() {
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+            whileHover={{ x: 8 }}
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight transition-transform duration-300 ease-out cursor-default"
           >
-            WHAT I OFFER
+            WHAT I{' '}
+            <span className="inline-block min-w-[7ch]">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={offerTitleIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.45, ease: 'easeInOut' }}
+                  className="text-purple-200 drop-shadow-[0_0_15px_rgba(196,181,253,0.6)] inline-block"
+                >
+                  {offerTitles[offerTitleIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </motion.h2>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

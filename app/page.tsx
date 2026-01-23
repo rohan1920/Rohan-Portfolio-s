@@ -5,12 +5,15 @@ import SelectedWorks from '@/components/SelectedWorks'
 import Services from '@/components/Services'
 import ScrollingText from '@/components/ScrollingText'
 import DefiningSyntax from '@/components/DefiningSyntax'
+import Certifications from '@/components/Certifications'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
+import CustomCursor from '@/components/CustomCursor'
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
+      <CustomCursor />
       <LoadingScreen />
       <Navigation />
       <Hero />
@@ -18,6 +21,7 @@ export default function Home() {
       <Services />
       <ScrollingText />
       <DefiningSyntax />
+      <Certifications />
       <Contact />
       <Footer />
     </main>

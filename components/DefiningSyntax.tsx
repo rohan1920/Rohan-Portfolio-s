@@ -1,31 +1,27 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
-import { useEffect } from 'react'
 
 const sections = [
   {
     number: '01',
     label: 'THE APPROACH',
     title: 'Engineered Chaos.',
-    description:
-      "I don't just write code; I orchestrate systems. Bridging the gap between raw, unstructured data and elegant, functional user experiences.",
+    description: "I don&apos;t just write code; I orchestrate systems. Bridging the gap between raw, unstructured data and elegant, functional user experiences.",
   },
   {
     number: '02',
     label: 'THE FOCUS',
     title: 'Beyond Automation.',
-    description:
-      "Building Agentic AI that doesn't just follow instructions, but understands intent, plans autonomously, and executes complex tasks.",
+    description: "Building Agentic AI that doesn&apos;t just follow instructions, but understands intent, plans autonomously, and executes complex tasks.",
   },
   {
     number: '03',
     label: 'THE GOAL',
     title: 'Future Proofing.',
-    description:
-      'Crafting scalable, high-performance digital infrastructure designed to evolve with the rapid pace of technological advancement.',
+    description: 'Crafting scalable, high-performance digital infrastructure designed to evolve with the rapid pace of technological advancement.',
   },
 ]
 
@@ -48,7 +44,7 @@ export default function DefiningSyntax() {
           opacity: 1,
           y: 0,
           duration: 1.5,
-          ease: [0.22, 1, 0.36, 1],
+          ease: 'power3.out', // GSAP safe
         }
       )
     }
@@ -67,13 +63,18 @@ export default function DefiningSyntax() {
           ref={titleRef}
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }} // Framer Motion safe
           className="mb-32 text-center"
         >
           <h2 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white leading-[0.9] tracking-tight">
             <span className="text-white">DEFINING THE</span>
             <br />
-            <span className="text-transparent [-webkit-text-stroke:2px_white]">SYNTAX OF</span>
+            <span className="text-transparent [-webkit-text-stroke:2px_white]">
+              <span className="text-purple-200 drop-shadow-[0_0_20px_rgba(196,181,253,0.7)] [-webkit-text-stroke:2px_rgba(196,181,253,0.8)]">
+                SYNTAX
+              </span>{' '}
+              OF
+            </span>
             <br />
             <span className="text-white">INTELLIGENCE.</span>
           </h2>
@@ -89,7 +90,7 @@ export default function DefiningSyntax() {
               transition={{
                 delay: 0.5 + index * 0.2,
                 duration: 1,
-                ease: [0.22, 1, 0.36, 1],
+                ease: 'easeInOut',
               }}
               className="relative"
             >
@@ -113,9 +114,7 @@ export default function DefiningSyntax() {
               </h3>
 
               {/* Description */}
-              <p className="text-white/60 leading-relaxed text-base">
-                {section.description}
-              </p>
+              <p className="text-white/60 leading-relaxed text-base">{section.description}</p>
 
               {/* White circular element (for column 2) */}
               {index === 1 && (

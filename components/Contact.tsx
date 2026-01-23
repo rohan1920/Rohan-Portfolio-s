@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { Linkedin, Github, Twitter, Instagram, Copy, Check } from 'lucide-react'
+import { ArrowUpRight, Copy, Check } from 'lucide-react'
 import { CONTACT } from '@/lib/constants'
 
 export default function Contact() {
@@ -24,10 +24,10 @@ export default function Contact() {
   }
 
   const socialLinks = [
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Github, href: 'https://github.com', label: 'GitHub' },
-    { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+    { href: 'https://linkedin.com', label: 'LINKEDIN' },
+    { href: 'https://github.com', label: 'GITHUB' },
+    { href: 'https://twitter.com', label: 'TWITTER' },
+    { href: 'https://instagram.com', label: 'INSTAGRAM' },
   ]
 
   return (
@@ -38,39 +38,46 @@ export default function Contact() {
       className="py-32 px-6 lg:px-12 relative z-10"
     >
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-16"
-        >
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            LET'S BUILD SOMETHING.
-          </h2>
-          <p className="text-white/50 mb-8 text-lg leading-relaxed max-w-2xl">
-            I am currently open to freelance projects and new opportunities.
-          </p>
-
-          <motion.button
-            onClick={handleCopyEmail}
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-3 px-6 py-3.5 bg-white/5 border border-white/10 rounded-sm text-white hover:bg-white/10 transition-all duration-300"
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          {/* Left Side - Text and Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }} // ✅ safe
+            className="relative"
           >
-            {copied ? <Check size={18} /> : <Copy size={18} />}
-            <span className="text-sm font-medium">{copied ? 'Copied!' : 'Copy Email'}</span>
-          </motion.button>
-        </motion.div>
+            {/* Small white circle */}
+            <div className="absolute -left-4 top-8 w-2 h-2 bg-white rounded-full hidden lg:block" />
+            
+            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[0.9] tracking-tight">
+              <span className="text-white">LET&apos;S BUILD</span>
+              <br />
+              <span className="text-white/30">SOMETHING.</span>
+            </h2>
+            
+            <p className="text-white/70 mb-8 text-base leading-relaxed">
+              {"I am currently open to freelance projects and new opportunities."}
+            </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-wrap gap-4"
-        >
-          {socialLinks.map((link, index) => {
-            const Icon = link.icon
-            return (
+            <motion.button
+              onClick={handleCopyEmail}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center gap-2 px-6 py-3 bg-black border border-white/20 rounded-lg text-white hover:bg-white/5 transition-all duration-300"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+              <span className="text-sm font-medium">{copied ? 'Copied!' : 'COPY EMAIL'}</span>
+            </motion.button>
+          </motion.div>
+
+          {/* Right Side - Social Links */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: 'easeInOut' }} // ✅ safe
+            className="flex flex-col"
+          >
+            {socialLinks.map((link, index) => (
               <motion.a
                 key={link.label}
                 href={link.href}
@@ -81,19 +88,20 @@ export default function Contact() {
                 transition={{
                   delay: 0.4 + index * 0.1,
                   duration: 0.6,
-                  ease: [0.22, 1, 0.36, 1],
+                  ease: 'easeInOut', // ✅ safe
                 }}
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-5 py-3 bg-white/5 border border-white/10 rounded-sm text-white hover:bg-white/10 transition-all duration-300"
+                whileHover={{ x: 5 }}
+                className="flex items-center justify-between py-4 border-b border-white/10 last:border-b-0 group"
               >
-                <Icon size={18} />
-                <span className="text-sm font-medium">{link.label}</span>
-                <span className="text-sm">↗</span>
+                <span className="text-white font-bold text-sm uppercase tracking-wider">{link.label}</span>
+                <ArrowUpRight 
+                  size={18} 
+                  className="text-white/60 group-hover:text-white transition-colors" 
+                />
               </motion.a>
-            )
-          })}
-        </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   )
