@@ -33,7 +33,7 @@ export default function Powerhouse() {
           y: 0,
           scale: 1,
           duration: 1.5,
-          ease: [0.22, 1, 0.36, 1],
+          ease: "cubic-bezier(0.22, 1, 0.36, 1)",
         }
       )
     }

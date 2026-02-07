@@ -60,7 +60,7 @@ function ServiceCard({ service, index, isInView }: { service: typeof services[0]
           scale: 1,
           duration: 2.5,
           delay: index * 0.4,
-          ease: [0.22, 1, 0.36, 1],
+          ease: "cubic-bezier(0.22, 1, 0.36, 1)",
         }
       )
 

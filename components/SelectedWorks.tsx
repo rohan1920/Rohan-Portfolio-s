@@ -4,13 +4,12 @@ import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 import { gsap } from 'gsap'
-import Image from 'next/image'
 
 const projects = [
-  { number: '01', category: 'Agency', title: 'CLEAN COLLECTED', tech: 'Next.js / GSAP', link: '#' },
-  { number: '02', category: 'Luxury Sport', title: 'SIDCUP GOLF', tech: 'GSAP / JS', link: '#' },
-  { number: '03', category: 'Studio', title: 'RELEVANCE', tech: 'Framer Motion', link: '#' },
-  { number: '04', category: 'E-Commerce', title: 'NEXUS UI', tech: 'React / Tailwind', link: '#' },
+  { number: '01', category: 'Full Stack', title: 'Reporting System Web Application', tech: 'Next.js / TypeScript / Node.js', link: '#' },
+  { number: '02', category: 'Real-Time', title: 'Real-Time Communication App (WhatsApp Clone)', tech: 'React / WebSocket / Node.js', link: '#' },
+  { number: '03', category: 'AI Automation', title: 'Automated Task Management with Claude AI', tech: 'Claude AI / Python / Next.js', link: '#' },
+  { number: '04', category: 'E-Commerce', title: 'DineMarket', tech: 'Next.js / Tailwind / Stripe', link: '#' },
 ]
 
 function ProjectCard({ project, index, isInView, isActive, isVisible }: {
@@ -89,7 +88,6 @@ function ProjectCard({ project, index, isInView, isActive, isVisible }: {
 export default function SelectedWorks() {
   const ref = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [activeIndex, setActiveIndex] = useState(0)
   const [visibleIndex, setVisibleIndex] = useState(0)
@@ -116,96 +114,34 @@ export default function SelectedWorks() {
     return () => cards.forEach((card) => observer.unobserve(card))
   }, [])
 
-  useEffect(() => {
-    if (imageRef.current) {
-      gsap.to(imageRef.current, {
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          if (imageRef.current) {
-            gsap.to(imageRef.current, {
-              opacity: 1,
-              duration: 0.5,
-              ease: 'power2.out',
-            })
-          }
-        },
-      })
-    }
-  }, [activeIndex])
-
   return (
     <motion.section id="work" ref={ref} className="py-32 px-6 lg:px-12 relative z-10">
       <div className="max-w-7xl mx-auto relative">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          <div ref={containerRef} className="space-y-0">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ duration: 1.2, ease: 'easeInOut' }} // ✅ safe
-              className="mb-20"
-            >
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                Selected <span className="text-purple-200 drop-shadow-[0_0_15px_rgba(196,181,253,0.6)]">Work</span>
-              </h2>
-              <div className="text-white/50 text-sm uppercase tracking-wider mb-3">Case Studies</div>
-              <div className="text-white/50 text-sm uppercase tracking-wider">04 PROJECTS</div>
-            </motion.div>
+        <div ref={containerRef} className="space-y-0">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            className="mb-20"
+          >
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              Selected <span className="text-purple-200 drop-shadow-[0_0_15px_rgba(196,181,253,0.6)]">Work</span>
+            </h2>
+            <div className="text-white/50 text-sm uppercase tracking-wider mb-3">Case Studies</div>
+            <div className="text-white/50 text-sm uppercase tracking-wider">04 PROJECTS</div>
+          </motion.div>
 
-            {projects.map((project, index) => (
-              <div key={project.number} data-project-index={index}>
-                <ProjectCard
-                  project={project}
-                  index={index}
-                  isInView={isInView}
-                  isActive={activeIndex === index}
-                  isVisible={visibleIndex >= index}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="sticky top-32 h-[600px] hidden lg:block">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-black/50 backdrop-blur-sm">
-              <motion.div
-                ref={imageRef}
-                key={activeIndex}
-                className="absolute inset-0"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, ease: 'easeInOut' }}
-              >
-                <div className="relative w-full h-full overflow-hidden">
-                  <Image
-                    src="/images/rohan-portrait.jpg"
-                    alt="Rohan Majeed"
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: 'center center', objectFit: 'cover' }}
-                    priority={activeIndex === 0}
-                    quality={90}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 w-24 h-24 bg-black/80 backdrop-blur-sm pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-black via-black/90 to-transparent pointer-events-none" />
-                </div>
-              </motion.div>
-
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                <motion.a
-                  href={projects[activeIndex].link}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-sm font-medium flex items-center gap-2 hover:bg-white/20 transition-colors"
-                >
-                  Visit Site
-                  <ExternalLink size={16} />
-                </motion.a>
-              </div>
+          {projects.map((project, index) => (
+            <div key={project.number} data-project-index={index}>
+              <ProjectCard
+                project={project}
+                index={index}
+                isInView={isInView}
+                isActive={activeIndex === index}
+                isVisible={visibleIndex >= index}
+              />
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </motion.section>

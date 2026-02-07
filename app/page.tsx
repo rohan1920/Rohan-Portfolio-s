@@ -12,18 +12,20 @@ import CustomCursor from '@/components/CustomCursor'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-white relative z-10">
       <CustomCursor />
       <LoadingScreen />
-      <Navigation />
-      <Hero />
-      <SelectedWorks />
-      <Services />
-      <ScrollingText />
-      <DefiningSyntax />
-      <Certifications />
-      <Contact />
-      <Footer />
+      <div className="relative z-20">
+        <Navigation />
+        <Hero />
+        <SelectedWorks />
+        <Services />
+        <ScrollingText />
+        <DefiningSyntax />
+        <Certifications />
+        <Contact />
+        <Footer />
+      </div>
     </main>
   )
 }
